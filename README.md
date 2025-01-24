@@ -25,4 +25,4 @@ The dashboard uses JavaScript to ping each website and checks if it is reachable
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/cdac-isea-monitoring.git
+   git clone https://github.com/cdac-isea-cybersecurity/cdac-isea-monitoring.git
