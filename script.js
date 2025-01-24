@@ -2,7 +2,7 @@
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 
 // Timeout for fetch requests (in milliseconds)
-const FETCH_TIMEOUT = 10000; // 10 seconds
+const FETCH_TIMEOUT = 30000; // 10 seconds
 
 // List of websites to monitor
 const websites = [
