@@ -1,3 +1,6 @@
+// Netlify Function URL
+const NETLIFY_FUNCTION_URL = "/.netlify/functions/ping";
+
 // List of websites to monitor
 const websites = [
   { name: "isea.gov.in", url: "https://isea.gov.in" },
@@ -68,18 +71,27 @@ function updateUptimeScore() {
   document.getElementById("uptime-score").textContent = `${uptimeScore}%`;
 }
 
-// Ping a website directly using fetch
+// Ping a website using the Netlify Function
 async function pingWebsite(website) {
   const startTime = Date.now();
 
   try {
-    const response = await fetch(website.url, { method: "HEAD", mode: "no-cors" });
+    const response = await fetch(NETLIFY_FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: website.url }),
+    });
+    const data = await response.json();
+
     const endTime = Date.now();
     const ping = endTime - startTime;
 
-    // If the request doesn't throw an error, assume the website is working
-    const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
-    return { isWorking: true, ping, speed };
+    if (data.isWorking) {
+      const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
+      return { isWorking: true, ping, speed };
+    } else {
+      return { isWorking: false, ping: null, speed: null };
+    }
   } catch (error) {
     return { isWorking: false, ping: null, speed: null };
   }
@@ -148,17 +160,29 @@ async function checkCustomWebsite() {
   const startTime = Date.now();
 
   try {
-    const response = await fetch(url, { method: "HEAD", mode: "no-cors" });
+    const response = await fetch(NETLIFY_FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+    const data = await response.json();
+
     const endTime = Date.now();
     const ping = endTime - startTime;
 
-    // If the request doesn't throw an error, assume the website is working
-    const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
-    customResult.innerHTML = `
-      <strong>Status:</strong> Working 🟢<br>
-      <strong>Speed:</strong> ${speed}<br>
-      <strong>Ping:</strong> ${ping}ms
-    `;
+    if (data.isWorking) {
+      const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
+      customResult.innerHTML = `
+        <strong>Status:</strong> Working 🟢<br>
+        <strong>Speed:</strong> ${speed}<br>
+        <strong>Ping:</strong> ${ping}ms
+      `;
+    } else {
+      customResult.innerHTML = `
+        <strong>Status:</strong> Not Working 🔴<br>
+        <strong>Error:</strong> Invalid response
+      `;
+    }
   } catch (error) {
     customResult.innerHTML = `
       <strong>Status:</strong> Not Working 🔴<br>
@@ -191,7 +215,7 @@ function toggleDarkMode() {
 function initializeApp() {
   initializeChart();
   monitorWebsites();
-  setInterval(monitorWebsites, 5 * 60 * 1000); // Refresh every 5 minutes
+  setInterval(monitorWebsites, 1000); // Refresh every 1 second
 }
 
 // Start the app
