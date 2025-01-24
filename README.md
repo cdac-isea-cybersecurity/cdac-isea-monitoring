@@ -1,5 +1,5 @@
 # CDAC ISEA Website Monitoring Dashboard
-![GitHub](https://img.shields.io/badge/license-MIT-blue) ![GitHub last commit](https://img.shields.io/github/last-commit/cdac-isea-cybersecurity/cdac-isea-monitoring) ![GitHub repo size](https://img.shields.io/github/repo-size/cdac-isea-cybersecurity/cdac-isea-monitoring)
+![GitHub](https://img.shields.io/badge/license-MIT-blue) ![GitHub last commit](https://img.shields.io/github/last-commit/cdac-isea-cybersecurity/cdac-isea-monitoring) ![GitHub repo size](https://img.shields.io/github/repo-size/cdac-isea-cybersecurity/cdac-isea-monitoring) [![Netlify Status](https://api.netlify.com/api/v1/badges/77bef363-9ed7-4dfc-a6e2-1fc7e6d5beb0/deploy-status)](https://app.netlify.com/sites/cdacstatus/deploys)
 
 
 A live monitoring dashboard to track the status of CDAC ISEA and related websites. Built with **HTML**, **CSS**, and **JavaScript**, this tool provides real-time updates on website availability.
