@@ -1,10 +1,116 @@
-/* Custom Website Check Styles */
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #7f8c8d;
+  text-align: center;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.status.working {
+  background-color: #4caf50; /* Green */
+}
+
+.status.slow {
+  background-color: #f39c12; /* Orange */
+}
+
+.status.not-working {
+  background-color: #f44336; /* Red */
+}
+
+/* Website Cards */
+.website-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card .name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.card .loading {
+  font-size: 14px;
+  color: #f39c12;
+}
+
+.card .speed, .card .ping {
+  font-size: 14px;
+  color: #34495e;
+  margin: 5px 0;
+}
+
+.card .status {
+  margin-top: 10px;
+}
+
+/* Custom Website Check */
 .custom-check {
   margin-top: 30px;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .custom-check h2 {
@@ -37,8 +143,30 @@
   background-color: #2980b9;
 }
 
-#custom-result {
+.custom-result {
   margin-top: 10px;
   font-size: 14px;
   color: #34495e;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .legend {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .website-list {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-check input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .custom-check button {
+    width: 100%;
+    margin-left: 0;
+  }
 }
