@@ -1,8 +1,5 @@
-// Proxy URL (use a public proxy or host your own)
-const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
-
-// Timeout for fetch requests (in milliseconds)
-const FETCH_TIMEOUT = 10000; // 10 seconds
+// Netlify Function URL
+const NETLIFY_FUNCTION_URL = "/.netlify/functions/ping";
 
 // List of websites to monitor
 const websites = [
@@ -74,35 +71,28 @@ function updateUptimeScore() {
   document.getElementById("uptime-score").textContent = `${uptimeScore}%`;
 }
 
-// Ping a website and return its status
+// Ping a website using the Netlify Function
 async function pingWebsite(website) {
   const startTime = Date.now();
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 
   try {
-    const response = await fetch(`${PROXY_URL}${website.url}`, {
-      method: "GET", // Use GET for better compatibility
-      mode: "cors",
-      signal: controller.signal,
-      headers: {
-        "X-Requested-With": "XMLHttpRequest", // Add this header to bypass some proxy restrictions
-      },
+    const response = await fetch(NETLIFY_FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: website.url }),
     });
-    clearTimeout(timeoutId);
+    const data = await response.json();
 
     const endTime = Date.now();
     const ping = endTime - startTime;
 
-    // Validate response status
-    if (response.ok) {
+    if (data.isWorking) {
       const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
       return { isWorking: true, ping, speed };
     } else {
       return { isWorking: false, ping: null, speed: null };
     }
   } catch (error) {
-    clearTimeout(timeoutId);
     return { isWorking: false, ping: null, speed: null };
   }
 }
@@ -168,25 +158,19 @@ async function checkCustomWebsite() {
   customResult.innerHTML = "Testing...";
 
   const startTime = Date.now();
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 
   try {
-    const response = await fetch(`${PROXY_URL}${url}`, {
-      method: "GET",
-      mode: "cors",
-      signal: controller.signal,
-      headers: {
-        "X-Requested-With": "XMLHttpRequest", // Add this header to bypass some proxy restrictions
-      },
+    const response = await fetch(NETLIFY_FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
     });
-    clearTimeout(timeoutId);
+    const data = await response.json();
 
     const endTime = Date.now();
     const ping = endTime - startTime;
 
-    // Validate response status
-    if (response.ok) {
+    if (data.isWorking) {
       const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
       customResult.innerHTML = `
         <strong>Status:</strong> Working 🟢<br>
@@ -196,11 +180,10 @@ async function checkCustomWebsite() {
     } else {
       customResult.innerHTML = `
         <strong>Status:</strong> Not Working 🔴<br>
-        <strong>Error:</strong> Invalid response (Status: ${response.status})
+        <strong>Error:</strong> Invalid response
       `;
     }
   } catch (error) {
-    clearTimeout(timeoutId);
     customResult.innerHTML = `
       <strong>Status:</strong> Not Working 🔴<br>
       <strong>Error:</strong> ${error.message || "Request timed out or failed"}
