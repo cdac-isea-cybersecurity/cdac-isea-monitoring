@@ -5,12 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CDAC ISEA Website Monitoring</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- For charts -->
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>CDAC ISEA Website Monitoring</h1>
-    <p class="subtitle">Live status of CDAC ISEA and related websites:</p>
+    <header>
+      <h1>CDAC ISEA Website Monitoring</h1>
+      <p class="subtitle">Live status of CDAC ISEA and related websites:</p>
+      <div class="dark-mode-toggle">
+        <label for="dark-mode">Dark Mode</label>
+        <input type="checkbox" id="dark-mode" onchange="toggleDarkMode()">
+      </div>
+    </header>
 
     <!-- Legend -->
     <div class="legend">
@@ -53,12 +61,19 @@
       <div id="custom-result" class="custom-result"></div>
     </div>
 
-    <!-- Dark Mode Toggle -->
-    <div class="dark-mode-toggle">
-      <label for="dark-mode">Dark Mode</label>
-      <input type="checkbox" id="dark-mode" onchange="toggleDarkMode()">
+    <!-- Export Data -->
+    <div class="export-container">
+      <h2>Export Data</h2>
+      <button onclick="exportData()">Export as CSV</button>
+    </div>
+
+    <!-- Gamification -->
+    <div class="gamification">
+      <h2>Uptime Score</h2>
+      <div id="uptime-score">Loading...</div>
     </div>
   </div>
   <script src="script.js"></script>
+  <script src="service-worker.js"></script>
 </body>
 </html>
