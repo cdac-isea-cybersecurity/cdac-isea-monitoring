@@ -2,7 +2,7 @@
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 
 // Timeout for fetch requests (in milliseconds)
-const FETCH_TIMEOUT = 30000; // 10 seconds
+const FETCH_TIMEOUT = 10000; // 10 seconds
 
 // List of websites to monitor
 const websites = [
@@ -85,6 +85,9 @@ async function pingWebsite(website) {
       method: "GET", // Use GET for better compatibility
       mode: "cors",
       signal: controller.signal,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest", // Add this header to bypass some proxy restrictions
+      },
     });
     clearTimeout(timeoutId);
 
@@ -173,6 +176,9 @@ async function checkCustomWebsite() {
       method: "GET",
       mode: "cors",
       signal: controller.signal,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest", // Add this header to bypass some proxy restrictions
+      },
     });
     clearTimeout(timeoutId);
 
