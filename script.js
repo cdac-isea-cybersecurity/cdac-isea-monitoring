@@ -1,3 +1,6 @@
+// Proxy URL (use a public proxy or host your own)
+const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+
 // List of websites to monitor
 const websites = [
   { name: "isea.gov.in", url: "https://isea.gov.in" },
@@ -7,11 +10,14 @@ const websites = [
   { name: "staysafeonline.in", url: "https://staysafeonline.in" },
 ];
 
-// Function to ping a website and measure speed
+// Function to ping a website using a proxy
 async function pingWebsite(website) {
   const startTime = Date.now();
   try {
-    const response = await fetch(website.url, { mode: "no-cors" });
+    const response = await fetch(`${PROXY_URL}${website.url}`, {
+      method: "HEAD", // Use HEAD to reduce response size
+      mode: "cors",
+    });
     const endTime = Date.now();
     const ping = endTime - startTime;
     const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
@@ -23,8 +29,18 @@ async function pingWebsite(website) {
 
 // Function to update the UI
 function updateUI(website, status, ping, speed) {
-  const card = document.createElement("div");
-  card.className = "card";
+  const cardId = `card-${website.name.replace(/\./g, "-")}`; // Create a unique ID for each card
+  let card = document.getElementById(cardId);
+
+  if (!card) {
+    // Create a new card if it doesn't exist
+    card = document.createElement("div");
+    card.id = cardId;
+    card.className = "card";
+    document.getElementById("website-list").appendChild(card);
+  }
+
+  // Update the card content
   card.innerHTML = `
     <div class="name">${website.name}</div>
     <div class="loading">${status === null ? "Testing..." : ""}</div>
@@ -32,7 +48,6 @@ function updateUI(website, status, ping, speed) {
     <div class="ping">${ping ? `Ping: ${ping}ms` : ""}</div>
     <div class="status ${status ? (speed === "Slow" ? "slow" : "working") : "not-working"}"></div>
   `;
-  document.getElementById("website-list").appendChild(card);
 }
 
 // Function to clear the list before updating
@@ -64,7 +79,10 @@ async function checkCustomWebsite() {
 
   const startTime = Date.now();
   try {
-    const response = await fetch(url, { mode: "no-cors" });
+    const response = await fetch(`${PROXY_URL}${url}`, {
+      method: "HEAD",
+      mode: "cors",
+    });
     const endTime = Date.now();
     const ping = endTime - startTime;
     const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
