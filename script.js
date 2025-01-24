@@ -23,15 +23,16 @@ async function pingWebsite(website) {
 
 // Function to update the UI
 function updateUI(website, status, ping, speed) {
-  const listItem = document.createElement("li");
-  listItem.innerHTML = `
-    <span>${website.name}</span>
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="name">${website.name}</div>
     <div class="loading">${status === null ? "Testing..." : ""}</div>
     <div class="speed">${speed ? `Speed: ${speed}` : ""}</div>
     <div class="ping">${ping ? `Ping: ${ping}ms` : ""}</div>
-    <div class="status ${status ? "working" : "not-working"}"></div>
+    <div class="status ${status ? (speed === "Slow" ? "slow" : "working") : "not-working"}"></div>
   `;
-  document.getElementById("website-list").appendChild(listItem);
+  document.getElementById("website-list").appendChild(card);
 }
 
 // Function to clear the list before updating
