@@ -1,6 +1,9 @@
 // Proxy URL (use a public proxy or host your own)
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 
+// Timeout for fetch requests (in milliseconds)
+const FETCH_TIMEOUT = 10000; // 10 seconds
+
 // List of websites to monitor
 const websites = [
   { name: "isea.gov.in", url: "https://isea.gov.in" },
@@ -10,19 +13,32 @@ const websites = [
   { name: "staysafeonline.in", url: "https://staysafeonline.in" },
 ];
 
-// Function to ping a website using a proxy
+// Function to ping a website using a proxy with timeout
 async function pingWebsite(website) {
   const startTime = Date.now();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
   try {
     const response = await fetch(`${PROXY_URL}${website.url}`, {
-      method: "HEAD", // Use HEAD to reduce response size
+      method: "GET", // Use GET for better compatibility
       mode: "cors",
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
+
     const endTime = Date.now();
     const ping = endTime - startTime;
-    const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
-    return { isWorking: true, ping, speed };
+
+    // Validate response status
+    if (response.ok) {
+      const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
+      return { isWorking: true, ping, speed };
+    } else {
+      return { isWorking: false, ping: null, speed: null };
+    }
   } catch (error) {
+    clearTimeout(timeoutId);
     return { isWorking: false, ping: null, speed: null };
   }
 }
@@ -78,23 +94,39 @@ async function checkCustomWebsite() {
   customResult.innerHTML = "Testing...";
 
   const startTime = Date.now();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
   try {
     const response = await fetch(`${PROXY_URL}${url}`, {
-      method: "HEAD",
+      method: "GET",
       mode: "cors",
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
+
     const endTime = Date.now();
     const ping = endTime - startTime;
-    const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
-    customResult.innerHTML = `
-      <strong>Status:</strong> Working 🟢<br>
-      <strong>Speed:</strong> ${speed}<br>
-      <strong>Ping:</strong> ${ping}ms
-    `;
+
+    // Validate response status
+    if (response.ok) {
+      const speed = ping < 500 ? "Fast" : ping < 1000 ? "Moderate" : "Slow";
+      customResult.innerHTML = `
+        <strong>Status:</strong> Working 🟢<br>
+        <strong>Speed:</strong> ${speed}<br>
+        <strong>Ping:</strong> ${ping}ms
+      `;
+    } else {
+      customResult.innerHTML = `
+        <strong>Status:</strong> Not Working 🔴<br>
+        <strong>Error:</strong> Invalid response (Status: ${response.status})
+      `;
+    }
   } catch (error) {
+    clearTimeout(timeoutId);
     customResult.innerHTML = `
       <strong>Status:</strong> Not Working 🔴<br>
-      <strong>Error:</strong> ${error.message}
+      <strong>Error:</strong> ${error.message || "Request timed out or failed"}
     `;
   }
 }
