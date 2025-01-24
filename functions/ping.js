@@ -1,12 +1,32 @@
 const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
-  const { url } = JSON.parse(event.body);
-
-  if (!url) {
+  // Check if the request body exists
+  if (!event.body) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: "URL is required" }),
+      body: JSON.stringify({ error: "Request body is missing" }),
+    };
+  }
+
+  let url;
+  try {
+    // Parse the request body
+    const body = JSON.parse(event.body);
+    url = body.url;
+
+    // Validate the URL
+    if (!url) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "URL is required" }),
+      };
+    }
+  } catch (error) {
+    // Handle JSON parsing errors
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Invalid JSON input" }),
     };
   }
 
