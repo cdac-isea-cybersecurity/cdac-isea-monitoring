@@ -9,17 +9,35 @@
 <body>
   <div class="container">
     <h1>CDAC ISEA Website Monitoring</h1>
-    <p>Live status of CDAC ISEA and related websites:</p>
-    <ul id="website-list">
+    <p class="subtitle">Live status of CDAC ISEA and related websites:</p>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="status working"></div>
+        <span>Live</span>
+      </div>
+      <div class="legend-item">
+        <div class="status slow"></div>
+        <span>Slow</span>
+      </div>
+      <div class="legend-item">
+        <div class="status not-working"></div>
+        <span>Not Responding</span>
+      </div>
+    </div>
+
+    <!-- Website Cards -->
+    <div id="website-list" class="website-list">
       <!-- Website status will be dynamically added here -->
-    </ul>
+    </div>
 
     <!-- Custom Website Check -->
     <div class="custom-check">
       <h2>Check Custom Website</h2>
       <input type="text" id="custom-url" placeholder="Enter website URL (e.g., https://example.com)">
       <button onclick="checkCustomWebsite()">Check</button>
-      <div id="custom-result"></div>
+      <div id="custom-result" class="custom-result"></div>
     </div>
   </div>
   <script src="script.js"></script>
