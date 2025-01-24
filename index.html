@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CDAC ISEA Website Monitoring</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- For charts -->
 </head>
 <body>
   <div class="container">
@@ -32,12 +33,30 @@
       <!-- Website status will be dynamically added here -->
     </div>
 
+    <!-- Ping History Chart -->
+    <div class="chart-container">
+      <h2>Ping History</h2>
+      <canvas id="pingChart"></canvas>
+    </div>
+
+    <!-- Ping Log -->
+    <div class="log-container">
+      <h2>Recent Pings</h2>
+      <div id="ping-log" class="ping-log"></div>
+    </div>
+
     <!-- Custom Website Check -->
     <div class="custom-check">
       <h2>Check Custom Website</h2>
       <input type="text" id="custom-url" placeholder="Enter website URL (e.g., https://example.com)">
       <button onclick="checkCustomWebsite()">Check</button>
       <div id="custom-result" class="custom-result"></div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+      <label for="dark-mode">Dark Mode</label>
+      <input type="checkbox" id="dark-mode" onchange="toggleDarkMode()">
     </div>
   </div>
   <script src="script.js"></script>
