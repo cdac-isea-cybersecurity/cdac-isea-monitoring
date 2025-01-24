@@ -215,7 +215,7 @@ function toggleDarkMode() {
 function initializeApp() {
   initializeChart();
   monitorWebsites();
-  setInterval(monitorWebsites, 1000); // Refresh every 1 second
+  setInterval(monitorWebsites, 5 * 60 * 1000); // Refresh every 5 minutes
 }
 
 // Start the app
