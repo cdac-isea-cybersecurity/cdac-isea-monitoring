@@ -1,4 +1,5 @@
 // Netlify Function URL
+/* OPEN SOURCE */
 const NETLIFY_FUNCTION_URL = "/.netlify/functions/ping";
 
 // List of websites to monitor
